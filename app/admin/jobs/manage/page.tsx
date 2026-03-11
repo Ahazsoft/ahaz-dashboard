@@ -190,14 +190,58 @@ export default function ManageJobsPage() {
     }
   };
 
-  // Handle status change
-  const handleStatusChange = (id: string, newStatus: "open" | "closed") => {
-    const updatedJobs = jobs.map((job) =>
+  // Handle status change (persist via API + optimistic UI)
+  const handleStatusChange = async (id: string, newStatus: "open" | "closed") => {
+    const prevJobs = jobs;
+    const optimistic = jobs.map((job) =>
       job.id === id ? { ...job, status: newStatus } : job,
     );
-    setJobs(updatedJobs);
-    localStorage.setItem("jobs", JSON.stringify(updatedJobs));
-    setStatusChangeJob(null);
+    setJobs(optimistic);
+
+    try {
+      const res = await fetch(`/api/jobs/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!res.ok) {
+        throw new Error(await res.text().catch(() => String(res.status)));
+      }
+
+      const json = await res.json();
+      const updated = json.job;
+
+      const normalized = {
+        id: String(updated.id),
+        company: updated.company,
+        title: updated.title,
+        jobType: updated.jobType ?? updated.job_type,
+        jobLevel: updated.jobLevel ?? updated.job_level,
+        location: updated.location,
+        salary: updated.salary,
+        description: updated.description,
+        education: updated.education,
+        email: updated.email,
+        postDate: updated.postDate ?? updated.post_date,
+        expiryDate: updated.postDate ?? updated.post_date,
+        status: updated.status ?? "open",
+        applicants: updated.applicants ?? [],
+      } as JobModel;
+
+      const finalJobs = optimistic.map((j) => (j.id === String(normalized.id) ? normalized : j));
+      setJobs(finalJobs);
+      try {
+        localStorage.setItem("jobs", JSON.stringify(finalJobs));
+      } catch (e) {
+        // ignore localStorage errors
+      }
+    } catch (err) {
+      console.error("Failed to change status", err);
+      setJobs(prevJobs);
+    } finally {
+      setStatusChangeJob(null);
+    }
   };
 
   // Format date
@@ -338,8 +382,8 @@ export default function ManageJobsPage() {
                             >
                               <DoorOpen className="w-4 h-4 mr-2" />
                               {job.status === "open"
-                                ? "Close Position"
-                                : "Reopen Position"}
+                                ? "Close"
+                                : "Reopen"}
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="cursor-pointer"
