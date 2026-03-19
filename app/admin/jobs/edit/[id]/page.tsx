@@ -93,26 +93,30 @@ export default function EditJobPage() {
     let mounted = true;
 
     // Try fetching job from API first
-    fetch(`/api/jobs/read/${id}`)
+    fetch(`http://localhost:3001/api/job/${id}`)
       .then((res) => {
+        console.log(res);
+
         if (!res.ok) throw new Error("not-found");
         return res.json();
       })
       .then((data) => {
         if (!mounted) return;
-        const j = data.job;
+        const j = data;
+        console.log(`job data: ${j.job_level}`);
         if (j) {
           form.reset({
             title: j.title ?? "",
-            jobType: j.jobType ?? "",
-            jobLevel: j.jobLevel ?? "",
+            jobType: j.job_type ?? "",
+            jobLevel: j.job_level ?? "",
             location: j.location ?? "",
             salary: j.salary ?? "",
             description: j.description ?? "",
             education: j.education ?? "Bachelors Degree",
-            expiryDate: j.expiryDate ? j.expiryDate.split("T")[0] : "",
+            expiryDate: j.expiry_date ? j.expiry_date.split("T")[0] : "",
             email: j.email ?? "recruitement@ahaz.io",
           });
+          console.log('Values after reset:', form.getValues());
         } else {
           // fallback to localStorage
           const savedJobs = JSON.parse(
@@ -165,7 +169,7 @@ export default function EditJobPage() {
     if (!id) return;
     setIsSaving(true);
     try {
-      const res = await fetch(`/api/jobs/update/${id}`, {
+      const res = await fetch(`http://localhost:3001/api/job/edit/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -395,7 +399,7 @@ export default function EditJobPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Job Description (use bullet points)</FormLabel>
+                    <FormLabel>Job Description</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
@@ -403,7 +407,7 @@ export default function EditJobPage() {
                       />
                     </FormControl>
                     <p className="text-xs text-gray-500 mt-1">
-                      Start each line with a dash (-) for bullet points
+                      use markdown document format .md
                     </p>
                     <FormMessage />
                   </FormItem>

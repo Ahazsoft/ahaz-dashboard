@@ -71,10 +71,10 @@ export default function ManageJobsPage() {
   const refreshJobs = () => {
     // Fetch latest jobs from API
     setIsRefreshing(true);
-    fetch("/api/jobs/read")
+    fetch("http://localhost:3001/api/jobs")
       .then((res) => res.json())
       .then((data) => {
-        const apiJobs = (data.jobs || []).map((j: any) => ({
+        const apiJobs = (data || []).map((j: any) => ({
           id: String(j.id),
           company: j.company,
           title: j.title,
@@ -100,11 +100,11 @@ export default function ManageJobsPage() {
   useEffect(() => {
     let mounted = true;
     setIsRefreshing(true);
-    fetch("/api/jobs/read")
+    fetch("http://localhost:3001/api/jobs")
       .then((res) => res.json())
       .then((data) => {
         if (!mounted) return;
-        const apiJobs = (data.jobs || []).map((j: any) => ({
+        const apiJobs = (data || []).map((j: any) => ({
           id: String(j.id),
           company: j.company,
           title: j.title,
@@ -152,7 +152,7 @@ export default function ManageJobsPage() {
       const updatedJobs = jobs.filter((job) => job.id !== id);
       setJobs(updatedJobs);
 
-      const res = await fetch(`/api/jobs/delete/${id}`, { method: "DELETE" });
+      const res = await fetch(`http://localhost:3001/api/job/delete/${id}`, { method: "DELETE" });
       if (!res.ok) {
         // revert on failure: re-fetch jobs
         console.error(
@@ -160,7 +160,7 @@ export default function ManageJobsPage() {
           await res.text().catch(() => res.status),
         );
         // reload from API
-        fetch("/api/jobs/read")
+        fetch("http://localhost:3001/api/jobs")
           .then((r) => r.json())
           .then((data) =>
             setJobs(
@@ -199,7 +199,7 @@ export default function ManageJobsPage() {
     setJobs(optimistic);
 
     try {
-      const res = await fetch(`/api/jobs/update/${id}`, {
+      const res = await fetch(`http://localhost:3001/api/job/editstatus/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),

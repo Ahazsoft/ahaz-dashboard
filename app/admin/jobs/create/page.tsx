@@ -74,9 +74,9 @@ export default function PostJobPage() {
     resolver: zodResolver(jobFormSchema),
     defaultValues: {
       title: "",
-      jobType: "",
-      jobLevel: "",
-      location: "On-site",
+      jobType: "Full-time",
+      jobLevel: "Junior",
+      location: "",
       salary: "",
       description: "",
       education: "Bachelors Degree",
@@ -90,7 +90,7 @@ export default function PostJobPage() {
     try {
       // Prepare payload (no id — DB will generate it)
       const payload = {
-        company: 'Ahaz Solutions',
+        company: "Ahaz Solutions",
         title: values.title,
         jobType: values.jobType,
         jobLevel: values.jobLevel,
@@ -102,18 +102,18 @@ export default function PostJobPage() {
         expiryDate: new Date(values.expiryDate).toISOString(),
       } as const;
 
-      const res = await fetch('/api/jobs/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("http://localhost:3001/api/job/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
-        throw new Error(json?.error || 'Failed to save job');
+        throw new Error(json?.error || "Failed to save job");
       }
 
-      router.push('/admin/jobs/manage');
+      router.push("/admin/jobs/manage");
     } catch (error) {
       console.error("Error posting job:", error);
     } finally {
@@ -230,16 +230,13 @@ export default function PostJobPage() {
                     <FormItem>
                       <FormLabel>Location</FormLabel>
                       <FormControl>
-                        <Input
-                          value={field.value}
-                          readOnly
-                          className="w-full border border-black"
-                        />
+                        <Input className="w-full border border-black" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="salary"
@@ -331,16 +328,16 @@ export default function PostJobPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Job Description (use bullet points)</FormLabel>
+                    <FormLabel>Job Description </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="- Point one\n- Point two\n- Point three"
+                        placeholder="Enter Job Description"
                         className="min-h-36 resize-y border border-black"
                         {...field}
                       />
                     </FormControl>
                     <p className="text-xs text-gray-500 mt-1">
-                      Start each line with a dash (-) for bullet points
+                      use markdown document format .md
                     </p>
                     <FormMessage />
                   </FormItem>
