@@ -93,7 +93,7 @@ export default function EditJobPage() {
     let mounted = true;
 
     // Try fetching job from API first
-    fetch(`http://localhost:3001/api/job/${id}`)
+    fetch(`http://backend.ahaz.io/api/job/${id}`)
       .then((res) => {
         console.log(res);
 
