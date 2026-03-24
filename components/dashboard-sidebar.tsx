@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Briefcase, Plus, LayoutDashboard } from 'lucide-react';
+import { Menu, X, Briefcase, Plus, LayoutDashboard, Group, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -32,9 +32,9 @@ const sidebarItems: SidebarItem[] = [
     icon: <Briefcase className="w-5 h-5" />,
   },
   {
-    href: '/admin/jobs/create',
-    label: 'Post Job',
-    icon: <Plus className="w-5 h-5" />,
+    href: '/admin/applicants',
+    label: 'Applicants',
+    icon: <Users className="w-5 h-5" />,
   },
 ];
 

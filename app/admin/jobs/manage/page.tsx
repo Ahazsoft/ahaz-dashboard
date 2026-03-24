@@ -100,7 +100,7 @@ export default function ManageJobsPage() {
   useEffect(() => {
     let mounted = true;
     setIsRefreshing(true);
-    fetch("http://backend.ahaz.io/api/jobs")
+    fetch("https://backend.ahaz.io/api/jobs")
       .then((res) => res.json())
       .then((data) => {
         if (!mounted) return;
