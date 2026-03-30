@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Briefcase, Plus, LayoutDashboard, Group, Users } from 'lucide-react';
+import { Menu, X, Briefcase, Plus, LayoutDashboard, Group, Users, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -72,6 +73,22 @@ export function DashboardSidebar() {
     }
     return pathname === href || pathname.startsWith(href + '/');
   };
+
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    try {
+      setLoggingOut(true);
+      await fetch('/api/auth/logout', { method: 'POST' });
+      // redirect to login
+      router.push('/admin/login');
+    } catch (err) {
+      console.error('Logout failed', err);
+    } finally {
+      setLoggingOut(false);
+    }
+  }
 
   return (
     <>
@@ -167,7 +184,7 @@ export function DashboardSidebar() {
                           : 'text-gray-700 hover:bg-gray-50'
                       )}
                     >
-                      <div className="flex-shrink-0">{item.icon}</div>
+                      <div className="shrink-0">{item.icon}</div>
                       {(isOpen || isMobile) && (
                         <span className="text-sm font-medium">{item.label}</span>
                       )}
@@ -181,6 +198,20 @@ export function DashboardSidebar() {
             ))}
           </TooltipProvider>
         </nav>
+
+        {/* Footer / Logout */}
+        <div className="mt-auto border-t border-gray-100 p-4 fixed bottom-0">
+          <button
+            onClick={() => { handleLogout(); if (isMobile) setShowMobileSidebar(false); }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+            aria-disabled={loggingOut}
+          >
+            <LogOut className="w-5 h-5" />
+            {(isOpen || isMobile) && (
+              <span>{loggingOut ? 'Logging out...' : 'Log out'}</span>
+            )}
+          </button>
+        </div>
       </aside>
     </>
   );
