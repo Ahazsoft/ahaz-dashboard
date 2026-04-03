@@ -33,6 +33,7 @@ const jobFormSchema = z.object({
     .string()
     .min(1, "Job title is required")
     .min(3, "Title must be at least 3 characters"),
+  company:z.string(),
   jobType: z.string().min(1, "Job type is required"),
   jobLevel: z.string().min(1, "Job level is required"),
   location: z.string().min(1, "Location is required"),
@@ -74,9 +75,10 @@ export default function PostJobPage() {
     resolver: zodResolver(jobFormSchema),
     defaultValues: {
       title: "",
+      company:"Ahaz Software",
       jobType: "Full-time",
       jobLevel: "Junior",
-      location: "",
+      location: "Bole, Addis Ababa",
       salary: "",
       description: "",
       education: "Bachelors Degree",
@@ -90,7 +92,7 @@ export default function PostJobPage() {
     try {
       // Prepare payload (no id — DB will generate it)
       const payload = {
-        company: "Ahaz Solutions",
+        company: values.company,
         title: values.title,
         jobType: values.jobType,
         jobLevel: values.jobLevel,
@@ -102,7 +104,8 @@ export default function PostJobPage() {
         expiryDate: new Date(values.expiryDate).toISOString(),
       } as const;
 
-      const res = await fetch("http://backend.ahaz.io/api/job/add", {
+      const res = await fetch("http://localhost:3001/api/job/add", {
+      // const res = await fetch("https://backend.ahaz.io/api/job/add", `{
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -113,7 +116,7 @@ export default function PostJobPage() {
         throw new Error(json?.error || "Failed to save job");
       }
 
-      router.push("/admin/jobs/manage");
+      router.push("/admin/jobs");
     } catch (error) {
       console.error("Error posting job:", error);
     } finally {
@@ -125,7 +128,7 @@ export default function PostJobPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/admin/jobs/manage">
+        <Link href="/admin/jobs">
           <Button variant="ghost" size="icon" className="text-gray-600">
             <ArrowLeft className="w-4 h-4" />
           </Button>
@@ -146,7 +149,30 @@ export default function PostJobPage() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              
+              
+              {/* Row header  */}
+              <FormField
+                  control={form.control}
+                  name="company"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g., Senior Software Engineer"
+                          className="w-full border border-black"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
               {/* Row 1: Title, Job Type and Level */}
+
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
@@ -294,8 +320,7 @@ export default function PostJobPage() {
                       <FormControl>
                         <Input
                           type="email"
-                          {...field}
-                          readOnly
+                          {...field}                          
                           className="w-full border border-black"
                         />
                       </FormControl>
@@ -360,7 +385,7 @@ export default function PostJobPage() {
                     "Post Job"
                   )}
                 </Button>
-                <Link href="/admin/jobs/manage">
+                <Link href="/admin/jobs">
                   <Button type="button" variant="outline">
                     Cancel
                   </Button>

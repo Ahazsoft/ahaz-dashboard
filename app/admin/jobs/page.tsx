@@ -71,7 +71,8 @@ export default function ManageJobsPage() {
   const refreshJobs = () => {
     // Fetch latest jobs from API
     setIsRefreshing(true);
-    fetch("http://backend.ahaz.io/api/jobs")
+    fetch("http://localhost:3001/api/jobs")
+    // fetch("https://backend.ahaz.io/api/jobs")
       .then((res) => res.json())
       .then((data) => {
         const apiJobs = (data || []).map((j: any) => ({
@@ -100,7 +101,8 @@ export default function ManageJobsPage() {
   useEffect(() => {
     let mounted = true;
     setIsRefreshing(true);
-    fetch("https://backend.ahaz.io/api/jobs")
+    fetch("http://localhost:3001/api/jobs")
+    // fetch("https://backend.ahaz.io/api/jobs")
       .then((res) => res.json())
       .then((data) => {
         if (!mounted) return;
@@ -152,7 +154,8 @@ export default function ManageJobsPage() {
       const updatedJobs = jobs.filter((job) => job.id !== id);
       setJobs(updatedJobs);
 
-      const res = await fetch(`http://backend.ahaz.io/api/job/delete/${id}`, { method: "DELETE" });
+      const res = await fetch(`http://localhost:3001/api/job/delete/${id}`, { method: "DELETE" });
+      // const res = await fetch(`https://backend.ahaz.io/api/job/delete/${id}`, { method: "DELETE" });
       if (!res.ok) {
         // revert on failure: re-fetch jobs
         console.error(
@@ -160,7 +163,8 @@ export default function ManageJobsPage() {
           await res.text().catch(() => res.status),
         );
         // reload from API
-        fetch("http://backend.ahaz.io/api/jobs")
+        fetch("http://localhost:3001/api/jobs")
+        // fetch("https://backend.ahaz.io/api/jobs")
           .then((r) => r.json())
           .then((data) =>
             setJobs(
@@ -199,7 +203,8 @@ export default function ManageJobsPage() {
     setJobs(optimistic);
 
     try {
-      const res = await fetch(`http://backend.ahaz.io/api/job/editstatus/${id}`, {
+      // const res = await fetch(`https://backend.ahaz.io/api/job/editstatus/${id}`, {
+      const res = await fetch(`http://localhost:3001/api/job/editstatus/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
@@ -370,6 +375,15 @@ export default function ManageJobsPage() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => {
+                                window.location.href = `/admin/jobs/applicants/${job.id}`;
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <Eye className="w-4 h-4 mr-2" />
+                              {"View Applicants"}
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
                                 setStatusChangeJob({

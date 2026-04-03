@@ -28,7 +28,7 @@ const sidebarItems: SidebarItem[] = [
     icon: <LayoutDashboard className="w-5 h-5" />,
   },
   {
-    href: '/admin/jobs/manage',
+    href: '/admin/jobs',
     label: 'Manage Jobs',
     icon: <Briefcase className="w-5 h-5" />,
   },
@@ -80,7 +80,7 @@ export function DashboardSidebar() {
   async function handleLogout() {
     try {
       setLoggingOut(true);
-      await fetch('/api/auth/logout', { method: 'POST' });
+      await fetch('http://localhost:3001/api/auth/logout', { method: 'POST' });
       // redirect to login
       router.push('/admin/login');
     } catch (err) {

@@ -119,7 +119,7 @@ export default function DashboardPage() {
               Post New Job
             </Button>
           </Link>
-          <Link href="/admin/jobs/manage">
+          <Link href="/admin/jobs">
             <Button variant="outline">
               <Briefcase className="w-4 h-4 mr-2" />
               Manage Postings

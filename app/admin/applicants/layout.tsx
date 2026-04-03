@@ -8,7 +8,7 @@ export default function ApplicantsLayout({
   
  return (
      <div className="flex h-screen bg-gray-50">
-       <DashboardSidebar />
+       <DashboardSidebar /> 
        <main className="flex-1 overflow-auto p-4 md:p-8">
          {children}
        </main>

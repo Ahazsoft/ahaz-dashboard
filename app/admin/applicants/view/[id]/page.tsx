@@ -5,7 +5,8 @@ import { useParams, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Check, Star, X } from "lucide-react";
+import { ArrowLeft, Check, Star, X } from "lucide-react";
+import Link from "next/link";
 
 type Applicant = {
   id: string;
@@ -104,7 +105,12 @@ export default function ApplicantViewPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <Link href="/admin/jobs">
+          <Button variant="ghost" size="icon" className="text-gray-600">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+        </Link>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Applicant</h1>
           <p className="text-gray-500 mt-1">
@@ -155,7 +161,6 @@ export default function ApplicantViewPage() {
                     Links & Notes
                   </p>
                   <div className="space-y-2">
-                    
                     <div>
                       {applicant.github_link ? (
                         <a
@@ -178,13 +183,12 @@ export default function ApplicantViewPage() {
                           rel="noreferrer"
                           className="text-blue-600 hover:underline"
                         >
-
                           LinkedIn
                         </a>
                       ) : (
                         <span className="text-gray-500">LinkedIn: —</span>
                       )}
-                    </div>                   
+                    </div>
                     <div className="flex gap-2">
                       <Button
                         variant="outline"

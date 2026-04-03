@@ -33,6 +33,7 @@ const jobFormSchema = z.object({
     .string()
     .min(1, "Job title is required")
     .min(3, "Title must be at least 3 characters"),
+  company: z.string(),
   jobType: z.string().min(1, "Job type is required"),
   jobLevel: z.string().min(1, "Job level is required"),
   location: z.string().min(1, "Location is required"),
@@ -77,8 +78,9 @@ export default function EditJobPage() {
     defaultValues: {
       title: "",
       jobType: "",
+      company: "Ahaz Software",
       jobLevel: "",
-      location: "",
+      location: "Bole, Addis Ababa",
       salary: "",
       description: "",
       education: "Bachelors Degree",
@@ -93,7 +95,8 @@ export default function EditJobPage() {
     let mounted = true;
 
     // Try fetching job from API first
-    fetch(`http://backend.ahaz.io/api/job/${id}`)
+    fetch(`http://localhost:3001/api/job/${id}`)
+    // fetch(`https://backend.ahaz.io/api/job/${id}`)
       .then((res) => {
         console.log(res);
 
@@ -103,20 +106,21 @@ export default function EditJobPage() {
       .then((data) => {
         if (!mounted) return;
         const j = data;
-        console.log(`job data: ${j.job_level}`);
+        console.log(`job data: ${j}`);
         if (j) {
           form.reset({
             title: j.title ?? "",
+            company: j.company ?? "Ahaz Software",
             jobType: j.job_type ?? "",
             jobLevel: j.job_level ?? "",
-            location: j.location ?? "",
+            location: j.location ?? "Bole, Addis Ababa",
             salary: j.salary ?? "",
             description: j.description ?? "",
             education: j.education ?? "Bachelors Degree",
             expiryDate: j.expiry_date ? j.expiry_date.split("T")[0] : "",
             email: j.email ?? "recruitement@ahaz.io",
           });
-          console.log('Values after reset:', form.getValues());
+          console.log("Values after reset:", form.getValues());
         } else {
           // fallback to localStorage
           const savedJobs = JSON.parse(
@@ -182,7 +186,7 @@ export default function EditJobPage() {
         throw new Error(err?.error || "Failed to update job");
       }
       // success — navigate back to manage
-      router.push("/admin/jobs/manage");
+      router.push("/admin/jobs");
     } catch (err) {
       console.error(err);
     } finally {
@@ -199,7 +203,7 @@ export default function EditJobPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin/jobs/manage">
+        <Link href="/admin/jobs">
           <Button variant="ghost" size="icon" className="text-gray-600">
             <ArrowLeft className="w-4 h-4" />
           </Button>
@@ -217,6 +221,22 @@ export default function EditJobPage() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="company"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="w-full border border-black"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
@@ -366,7 +386,7 @@ export default function EditJobPage() {
                       <FormControl>
                         <Input
                           {...field}
-                          readOnly
+                          // readOnly
                           className="w-full border border-black"
                         />
                       </FormControl>
@@ -429,7 +449,7 @@ export default function EditJobPage() {
                     "Save Changes"
                   )}
                 </Button>
-                <Link href="/admin/jobs/manage">
+                <Link href="/admin/jobs">
                   <Button type="button" variant="outline">
                     Cancel
                   </Button>
