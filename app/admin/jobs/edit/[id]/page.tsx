@@ -95,8 +95,8 @@ export default function EditJobPage() {
     let mounted = true;
 
     // Try fetching job from API first
-    fetch(`http://localhost:3001/api/job/${id}`)
-    // fetch(`https://backend.ahaz.io/api/job/${id}`)
+    // fetch(`http://localhost:3001/api/job/${id}`)
+    fetch(`https://backend.ahaz.io/api/job/${id}`)
       .then((res) => {
         console.log(res);
 
@@ -173,7 +173,8 @@ export default function EditJobPage() {
     if (!id) return;
     setIsSaving(true);
     try {
-      const res = await fetch(`http://localhost:3001/api/job/edit/${id}`, {
+      // const res = await fetch(`http://localhost:3001/api/job/edit/${id}`, {
+      const res = await fetch(`https://backend.ahaz.io/api/job/edit/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

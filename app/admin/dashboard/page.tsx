@@ -34,7 +34,8 @@ export default function DashboardPage() {
     };
     const fetchApplicants = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/applicants");
+        const response = await fetch("https://backend.ahaz.io/api/applicants");
+        // const response = await fetch("http://localhost:3001/api/applicants");
         const data = await response.json();
         setApplicants(data);
       } catch (err) {

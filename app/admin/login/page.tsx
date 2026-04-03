@@ -40,7 +40,8 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/api/auth/signin", {
+      const response = await fetch("https://backend.ahaz.io/api/auth/signin", {
+      // const response = await fetch("http://localhost:3001/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

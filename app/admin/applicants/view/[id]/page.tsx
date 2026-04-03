@@ -42,8 +42,11 @@ export default function ApplicantViewPage() {
       setLoading(true);
       setError(null);
       try {
+        // const res = await fetch(
+        //   `http://localhost:3001/api/applicant/${applicantId}`,
+        // );
         const res = await fetch(
-          `http://localhost:3001/api/applicant/${applicantId}`,
+          `https://backend.ahaz.io/api/applicant/${applicantId}`,
         );
         if (!res.ok) throw new Error(String(res.status));
         const data = await res.json();
@@ -82,7 +85,8 @@ export default function ApplicantViewPage() {
     try {
       // optimistic UI change placeholder: backend API may differ
       await fetch(
-        `http://localhost:3001/api/applicants/${applicant.id}/status`,
+        `http://backend.ahaz.io/api/applicants/${applicant.id}/status`,
+        // `http://localhost:3001/api/applicants/${applicant.id}/status`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

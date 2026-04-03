@@ -2,7 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_ACCESS } from "@/lib/auth/cookies";
 
-const BACKEND_VERIFY_URL = "http://localhost:3001/api/auth/verify";
+const BACKEND_VERIFY_URL = "https://backend.ahaz.io/api/auth/verify";
+// const BACKEND_VERIFY_URL = "http://localhost:3001/api/auth/verify";
 
 // Protected routes (same as before)
 const PROTECTED_ROUTES = ["/dashboard", "/jobs", "/applicants"];

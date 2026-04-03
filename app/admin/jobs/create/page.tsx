@@ -104,8 +104,8 @@ export default function PostJobPage() {
         expiryDate: new Date(values.expiryDate).toISOString(),
       } as const;
 
-      const res = await fetch("http://localhost:3001/api/job/add", {
-      // const res = await fetch("https://backend.ahaz.io/api/job/add", `{
+      // const res = await fetch("http://localhost:3001/api/job/add", {
+      const res = await fetch("https://backend.ahaz.io/api/job/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

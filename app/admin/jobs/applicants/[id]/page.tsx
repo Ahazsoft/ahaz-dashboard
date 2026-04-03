@@ -63,7 +63,8 @@ export default function JobApplicantsPage() {
       try {
         // Fetch single job by id using the dedicated endpoint
         try {
-          const jobRes = await fetch(`http://localhost:3001/api/job/${id}`);
+          // const jobRes = await fetch(`http://localhost:3001/api/job/${id}`);
+          const jobRes = await fetch(`https://backend.ahaz.io/api/job/${id}`);
           const jobJson = await jobRes.json();
           const found = jobJson?.job ?? jobJson; // support { job } or direct job
           if (found) {
@@ -85,7 +86,8 @@ export default function JobApplicantsPage() {
           console.error("Failed to fetch job by id", e);
         }
 
-        const appsRes = await fetch("http://localhost:3001/api/applicants");
+        // const appsRes = await fetch("http://localhost:3001/api/applicants");
+        const appsRes = await fetch("https://backend.ahaz.io/api/applicants");
         const appsJson = await appsRes.json();
         const forJob = (appsJson || [])
           .filter((a: any) => String(a.job_id) === id)

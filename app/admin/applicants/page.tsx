@@ -68,7 +68,8 @@ export default function ApplicantsPage() {
   useEffect(() => {
     const fetchApplicants = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/applicants");
+        const response = await fetch("https://backend.ahaz.io/api/applicants");
+        // const response = await fetch("http://localhost:3001/api/applicants");
         const data = await response.json();
         setApplicants(data);
       } catch (err) {
@@ -78,6 +79,7 @@ export default function ApplicantsPage() {
 
     const fetchJobs = async () => {
       try {
+        // const response = await fetch("http://localhost:3001/api/jobs");
         const response = await fetch("https://backend.ahaz.io/api/jobs");
         const data = await response.json();
         setJobs(data);
